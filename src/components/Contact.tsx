@@ -19,7 +19,7 @@ export const Contact = () => {
     try {
       // Utilisation de Formspree pour l'envoi d'email
       // Note: Vous devrez confirmer votre email lors du premier envoi
-      const response = await fetch('https://formspree.io/f/xknkzqbq', {
+      const response = await fetch('https://formspree.io/f/xzdavpgw', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
