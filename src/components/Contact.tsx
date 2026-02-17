@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { Mail, MapPin, Phone, Send, Github, Linkedin } from 'lucide-react';
+import { Mail, MapPin, Phone, Send, Github, Linkedin, Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 export const Contact = () => {
@@ -10,13 +10,33 @@ export const Contact = () => {
     email: '',
     message: '',
   });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    alert('Message envoyé ! (Cette fonctionnalité est une démo)');
-    setFormData({ name: '', email: '', message: '' });
+    setStatus('sending');
+
+    try {
+      // Utilisation de Formspree pour l'envoi d'email
+      // Note: Vous devrez confirmer votre email lors du premier envoi
+      const response = await fetch('https://formspree.io/f/xknkzqbq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus('success');
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      setStatus('error');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -49,7 +69,7 @@ export const Contact = () => {
 
   const socialLinks = [
     { icon: <Github className="w-5 h-5" />, href: 'https://github.com/elogeanet-eng', label: 'GitHub' },
-    { icon: <Linkedin className="w-5 h-5" />, href: 'https://linkedin.com', label: 'LinkedIn' },
+    { icon: <Linkedin className="w-5 h-5" />, href: 'https://www.linkedin.com/in/kouao-franck-eloge-anet-18b454291', label: 'LinkedIn' },
   ];
 
   return (
@@ -194,11 +214,37 @@ export const Contact = () => {
 
               <button
                 type="submit"
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-violet-500/50 hover:shadow-xl hover:shadow-violet-500/60 transform hover:-translate-y-1 transition-all duration-300"
+                disabled={status === 'sending'}
+                className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold shadow-lg transition-all duration-300 transform ${status === 'sending'
+                  ? 'bg-slate-400 cursor-not-allowed'
+                  : status === 'success'
+                    ? 'bg-green-500 hover:bg-green-600 shadow-green-500/50'
+                    : status === 'error'
+                      ? 'bg-red-500 hover:bg-red-600 shadow-red-500/50'
+                      : 'bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-violet-500/50 hover:shadow-xl hover:shadow-violet-500/60 hover:-translate-y-1'
+                  }`}
               >
-                <Send className="w-5 h-5" />
-                Envoyer le message
+                {status === 'sending' && <Loader2 className="w-5 h-5 animate-spin" />}
+                {status === 'success' && <CheckCircle className="w-5 h-5" />}
+                {status === 'error' && <XCircle className="w-5 h-5" />}
+                {status === 'idle' && <Send className="w-5 h-5" />}
+
+                {status === 'idle' && 'Envoyer le message'}
+                {status === 'sending' && 'Envoi en cours...'}
+                {status === 'success' && 'Message envoyé !'}
+                {status === 'error' && 'Erreur lors de l\'envoi'}
               </button>
+
+              {status === 'success' && (
+                <p className="text-center text-green-600 dark:text-green-400 font-medium animate-fade-in">
+                  Merci ! Votre message a bien été envoyé.
+                </p>
+              )}
+              {status === 'error' && (
+                <p className="text-center text-red-600 dark:text-red-400 font-medium animate-fade-in">
+                  Une erreur est survenue. Veuillez réessayer ou me contacter par email directement.
+                </p>
+              )}
             </form>
           </motion.div>
         </div>
