@@ -101,7 +101,7 @@ export const About = () => {
               initial={{ opacity: 0 }}
               animate={isVisible ? { opacity: 1 } : { opacity: 0 }}
               transition={{ duration: 0.6, delay: 1 }}
-              href="/CV_Anet_Kouao.pdf"
+              href="/cv.pdf"
               download
               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-violet-500/50 hover:shadow-xl hover:shadow-violet-500/60 transform hover:-translate-y-1 transition-all duration-300"
             >

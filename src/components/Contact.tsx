@@ -241,9 +241,14 @@ export const Contact = () => {
                 </p>
               )}
               {status === 'error' && (
-                <p className="text-center text-red-600 dark:text-red-400 font-medium animate-fade-in">
-                  Une erreur est survenue. Veuillez réessayer ou me contacter par email directement.
-                </p>
+                <div className="text-center space-y-2 animate-fade-in">
+                  <p className="text-red-600 dark:text-red-400 font-medium">
+                    Une erreur est survenue lors de l'envoi.
+                  </p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    💡 Assurez-vous d'avoir confirmé votre formulaire sur <strong>Formspree</strong> (vérifiez vos emails).
+                  </p>
+                </div>
               )}
             </form>
           </motion.div>
